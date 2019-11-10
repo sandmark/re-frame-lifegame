@@ -13,7 +13,17 @@
   (let [[x y] @(re-frame/subscribe [::subs/size])]
     [:div.world
      [:table
-      (for [y' (range y)]
-        [:tr
-         (for [x' (range x)]
-           [life-cell [x' y']])])]]))
+      [:tbody
+       (for [y' (range y)]
+         [:tr
+          (for [x' (range x)]
+            ^{:key (str x' y')} [life-cell [x' y']])])]]]))
+
+(defn next-button []
+  [:button {:on-click #(re-frame/dispatch [::events/thrive-all])}
+   "Next"])
+
+(defn app-panel []
+  [:div
+   [world-panel]
+   [next-button]])
