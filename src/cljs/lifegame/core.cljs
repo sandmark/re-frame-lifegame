@@ -1,11 +1,9 @@
 (ns lifegame.core
-  (:require
-   [reagent.core :as reagent]
-   [re-frame.core :as re-frame]
-   [lifegame.events :as events]
-   [lifegame.views :as views]
-   [lifegame.config :as config]
-   ))
+  (:require [reagent.core :as reagent]
+            [re-frame.core :as re-frame]
+            [lifegame.events :as events]
+            [lifegame.views :as views]
+            [lifegame.config :as config]))
 
 
 (defn dev-setup []
@@ -14,7 +12,7 @@
 
 (defn ^:dev/after-load mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent/render [views/main-panel]
+  (reagent/render [views/world-panel]
                   (.getElementById js/document "app")))
 
 (defn init []
