@@ -47,17 +47,16 @@
                     (= lives-count 3)))
       true)))
 
+(defn update-world [m f]
+  (reduce-kv (fn [coll k v]
+               (assoc coll k (f m k v))) {} m))
+
 (re-frame/reg-event-db
  ::thrive-all
  (fn [db]
-   (let [world (:world db)]
-     (letfn [(f [m k v]
-               (assoc m k (thrive world k v)))]
-       (assoc-in db [:world] (reduce-kv f {} world))))))
+   (update-in db [:world] update-world thrive)))
 
 (re-frame/reg-event-db
  ::random-lives
  (fn [db]
-   (letfn [(f [m k v]
-             (assoc m k (rand-nth [true false])))]
-     (update-in db [:world] #(reduce-kv f {} %)))))
+   (update-in db [:world] update-world #(rand-nth [true false]))))
