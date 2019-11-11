@@ -1,8 +1,12 @@
 (ns lifegame.subs
-  (:require
-   [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- ::name
+ ::world
  (fn [db]
-   (:name db)))
+   (:world db)))
+
+(re-frame/reg-sub
+ ::size
+ (fn [db]
+   (:size db)))
