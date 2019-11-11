@@ -5,9 +5,9 @@
             [reagent.core :as reagent]))
 
 (defn life-cell [[x y]]
-  (let [world @(re-frame/subscribe [::subs/world])
-        dead? (world [x y])]
-    [:td {:class    (if dead? "dead" "living")
+  (let [world   @(re-frame/subscribe [::subs/world])
+        living? (world [x y])]
+    [:td {:class    (if living? "living" "dead")
           :on-click #(re-frame/dispatch [::events/toggle-life [x y]])}]))
 
 (defn world-panel []
