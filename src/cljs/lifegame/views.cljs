@@ -25,19 +25,21 @@
    "Next"])
 
 (defn play-button []
-  (let [timer (reagent/atom nil)
-        val   (reagent/atom "Play")]
+  (let [timer (reagent/atom {:id   nil
+                             :text "Play"})]
     (letfn [(thrive-all []
               (re-frame/dispatch [::events/thrive-all]))
-            (toggle-timer [interval]  ;; TODO: This needs to be more readable
-              (if @timer
-                (do (swap! timer #(js/clearInterval %))
-                    (reset! val "Replay"))
-                (do (swap! timer #(js/setInterval thrive-all interval))
-                    (reset! val "Playing..."))))]
+
+            (reset-timer! [text f]
+              (reset! timer (-> @timer (update :id f) (assoc :text text))))
+
+            (toggle-timer [interval]
+              (if (:id @timer)
+                (reset-timer! "Play" #(js/clearInterval %))
+                (reset-timer! "Stop" #(js/setInterval thrive-all interval))))]
       (fn []
         [:button {:on-click #(toggle-timer 1000)}
-         @val]))))
+         (:text @timer)]))))
 
 (defn random-button []
   [:button {:on-click #(re-frame/dispatch [::events/random-lives])}
