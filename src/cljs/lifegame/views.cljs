@@ -29,7 +29,7 @@
         val   (reagent/atom "Play")]
     (letfn [(thrive-all []
               (re-frame/dispatch [::events/thrive-all]))
-            (toggle-timer [interval]
+            (toggle-timer [interval]  ;; TODO: This needs to be more readable
               (if @timer
                 (do (swap! timer #(js/clearInterval %))
                     (reset! val "Replay"))
@@ -39,8 +39,13 @@
         [:button {:on-click #(toggle-timer 1000)}
          @val]))))
 
+(defn random-button []
+  [:button {:on-click #(re-frame/dispatch [::events/random-lives])}
+   "Random"])
+
 (defn app-panel []
   [:div
    [play-button]
    [next-button]
+   [random-button]
    [world-panel]])

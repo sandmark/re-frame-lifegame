@@ -54,3 +54,10 @@
      (letfn [(f [m k v]
                (assoc m k (thrive world k v)))]
        (assoc-in db [:world] (reduce-kv f {} world))))))
+
+(re-frame/reg-event-db
+ ::random-lives
+ (fn [db]
+   (letfn [(f [m k v]
+             (assoc m k (rand-nth [true false])))]
+     (update-in db [:world] #(reduce-kv f {} %)))))
