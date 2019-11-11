@@ -1,7 +1,8 @@
 (ns lifegame.views
   (:require [re-frame.core :as re-frame]
             [lifegame.subs :as subs]
-            [lifegame.events :as events]))
+            [lifegame.events :as events]
+            [reagent.core :as reagent]))
 
 (defn life-cell [[x y]]
   (let [world @(re-frame/subscribe [::subs/world])
@@ -23,7 +24,23 @@
   [:button {:on-click #(re-frame/dispatch [::events/thrive-all])}
    "Next"])
 
+(defn play-button []
+  (let [timer (reagent/atom nil)
+        val   (reagent/atom "Play")]
+    (letfn [(thrive-all []
+              (re-frame/dispatch [::events/thrive-all]))
+            (toggle-timer [interval]
+              (if @timer
+                (do (swap! timer #(js/clearInterval %))
+                    (reset! val "Replay"))
+                (do (swap! timer #(js/setInterval thrive-all interval))
+                    (reset! val "Playing..."))))]
+      (fn []
+        [:button {:on-click #(toggle-timer 1000)}
+         @val]))))
+
 (defn app-panel []
   [:div
-   [world-panel]
-   [next-button]])
+   [play-button]
+   [next-button]
+   [world-panel]])
